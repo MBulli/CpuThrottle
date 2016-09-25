@@ -30,11 +30,17 @@ namespace CpuThrottle
             else
             {
                 // we are the watchdog
-                int procID = int.Parse(args[0]);
-                var procToWatch = Process.GetProcessById(procID);
-                procToWatch.WaitForExit();
-
-                SetCpuSpeed(100);
+                try
+                {
+                    int procID = int.Parse(args[0]);
+                    var procToWatch = Process.GetProcessById(procID);
+                    procToWatch.WaitForExit();
+                }
+                finally
+                {
+                    // if anything falls apart we don't really care, reset the cpu level, and exit.
+                    SetCpuSpeed(100);
+                }
             }
         }
 
